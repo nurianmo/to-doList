@@ -1,0 +1,12 @@
+.todoWrapper{
+    width: 90%;
+    border-bottom: 2px solid #efefef;
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 15px;
+    word-wrap: break-word;
+}
+
+.todoWrapper:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
