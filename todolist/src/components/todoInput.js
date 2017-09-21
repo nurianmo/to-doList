@@ -11,6 +11,7 @@ class TodoInput extends Component{
 
         this.updateValue = this.updateValue.bind(this);
         this.addTodo = this.addTodo.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
     updateValue(event){
@@ -25,11 +26,17 @@ class TodoInput extends Component{
         }
     }
 
+    handleKeyPress (event){
+        if(event.key == 'Enter'){
+            this.addTodo(this.state.value);
+          }
+    }
+
     render(){
         return(
             <div className="row">
                 <div className="col-lg-12">
-                    <input type="text" value={this.state.value} onChange={this.updateValue}/>
+                    <input type="text" value={this.state.value} onChange={this.updateValue} onKeyPress={this.handleKeyPress}/>
                 </div>
                 <div className="col-lg-12">
                     <button className="btn btn-outline-primary btn-lg" onClick={() => this.addTodo(this.state.value)}>Submit </button>
