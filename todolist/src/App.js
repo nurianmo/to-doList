@@ -30,7 +30,7 @@ class App extends Component {
     fetch('http://localhost:3001/task')
     .then(results => {
       return results.json(); // Transform the data into json
-    }).then(data => this.setState({todos: data.todos, nextId: data.nextId }))
+    }).then(data => this.setState({todos: data.todos, nextId: data.nextId }));
   }
 
   addTodo(todoText){
@@ -41,14 +41,13 @@ class App extends Component {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         todos:{
           id: this.state.nextId,
           text: todoText
-        },
-        nextId: this.state.nextId+1
+        }
       })
     });
     //Update state
@@ -60,12 +59,20 @@ class App extends Component {
 
   removeTodo(id){
     //Delete todo in the server
-    fetch('http://localhost:3001/task/del/'+id);   
+    fetch('http://localhost:3001/task/del/'+id).then(
+      (results) => {
+        return results.json();
+      }
+    ).then((data) => {
+      if (data.ok) {
+        this.setState({
+          //Filter returns the elements of an array that meet the condition specifiend in a callback function
+          todos: this.state.todos.filter((todo, index) => todo.id !== id)
+        });
+      }
+    });   
     
-    this.setState({
-      //Filter returns the elements of an array that meet the condition specifiend in a callback function
-      todos: this.state.todos.filter((todo, index) => todo.id !== id)
-    });
+
   }
 
   render() {

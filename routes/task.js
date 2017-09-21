@@ -1,41 +1,55 @@
 var express = require('express');
 var router = express.Router();
+var promise = require('bluebird');
 
-//Example
-var tasks = {
-  todos: [
-    {
-      id: 0,
-      text: "AAA"
-    },
-    {
-      id: 1,
-      text: "BBB"
-    }
-],
-nextId: 2
+//Postgres
+var options = {
+  // Initialization Options
+  promiseLib: promise
 };
+var pgp = require("pg-promise")(options);
+var db = pgp("postgres://postgres:postgres@localhost:5432/todos");
+
 
 //Get todos
 router.get('/', function(req, res, next) {
-  res.send(tasks);
-  res.end();
+  db.any('SELECT * FROM todo ORDER BY id ASC')
+    .then(function(data){
+      res.status(200)
+        .json({
+            todos: data,
+            nextId: data[data.length - 1].id + 1
+        });
+    })
+    .catch(function(err){
+      return next(err);
+    });
 });
+
 
 //Add todo
 router.post('/add', function(req, res, next) {
-  tasks.todos.push(req.body.todos);
-  tasks.nextId = req.body.nextId;
-  res.end();
+  db.none('INSERT INTO todo (id, text)' + 'VALUES(${id}, ${text})', req.body.todos)
+    .then(function(){
+      res.status(200)
+        .json({ok: true});
+    })
+    .catch(function(err){
+      return next(err);
+    });
 });
 
 //Delete todo
 router.get('/del/:id', function(req, res, next) {
+  db.result('DELETE FROM todo where id = $1', req.params.id)
+    .then(function(result){
+      res.status(200)
+      .json({ok: true});
+    })
+    .catch(function(err){
+      return next(err);
+    });
 
-  tasks.todos = tasks.todos.filter(function(item){
-    return item.id != req.params.id;
-  });
-  res.end();
 });
 
 module.exports = router;
