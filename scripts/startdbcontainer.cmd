@@ -1,0 +1,1 @@
+docker run -p 5432:5432 --rm -e POSTGRES_PASSWORD=postgres --name postgres_container postgres
