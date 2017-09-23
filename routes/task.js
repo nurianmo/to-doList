@@ -15,10 +15,9 @@ var db = pgp("postgres://postgres:postgres@localhost:5432/todos");
 router.get('/', function(req, res, next) {
   db.any('SELECT * FROM todo ORDER BY id ASC')
     .then(function(data){
-      res.status(200)
+        res.status(200)
         .json({
-            todos: data,
-            nextId: data[data.length - 1].id + 1
+            todos: data
         });
     })
     .catch(function(err){
@@ -29,10 +28,12 @@ router.get('/', function(req, res, next) {
 
 //Add todo
 router.post('/add', function(req, res, next) {
-  db.none('INSERT INTO todo (id, text)' + 'VALUES(${id}, ${text})', req.body.todos)
-    .then(function(){
-      res.status(200)
-        .json({ok: true});
+  db.result('INSERT INTO todo (text)' + 'VALUES(${text}) RETURNING id', req.body.todos)
+    .then(function(data){
+      res.status(200).json({
+        ok: true,
+        idTodo: data.rows[0].id
+      });
     })
     .catch(function(err){
       return next(err);
@@ -49,7 +50,6 @@ router.get('/del/:id', function(req, res, next) {
     .catch(function(err){
       return next(err);
     });
-
 });
 
 module.exports = router;

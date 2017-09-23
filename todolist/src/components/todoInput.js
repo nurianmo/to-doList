@@ -14,20 +14,26 @@ class TodoInput extends Component{
         this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
+
+    //When event onChange happens this function is called
     updateValue(event){
         this.setState({value: event.target.value})
     }
 
+    //When event onClick happens this function is called
     addTodo(todo){
         //Ensure the todo text is not empty
         if(todo.length > 0){
+            //Call addTodo from props (App.js)
             this.props.addTodo(todo);
+            //Reset the state
             this.setState({value: ""});
         }
     }
 
+    //When event onKeyPress happens this function is called
     handleKeyPress (event){
-        if(event.key == 'Enter'){
+        if(event.key === 'Enter'){
             this.addTodo(this.state.value);
           }
     }

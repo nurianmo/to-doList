@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import './todoItem.css';
 
 class TodoItem extends Component{
-    constructor(props){
-        super(props);
-    }
-
+    //Calls this function when the user click on Done button
     removeTodo(id){
+        //Call the parent function removeTodo
         this.props.removeTodo(id);
     }
 
@@ -18,7 +16,6 @@ class TodoItem extends Component{
             </div>
         )
     }
-
 }
 
 export default TodoItem;
