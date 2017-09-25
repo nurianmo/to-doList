@@ -2,5 +2,6 @@ CREATE DATABASE todos;
 \c todos
 CREATE TABLE todo (
 id SERIAL PRIMARY KEY,
-text TEXT NOT NULL
+text TEXT NOT NULL,
+done BOOLEAN NOT NULL
 );

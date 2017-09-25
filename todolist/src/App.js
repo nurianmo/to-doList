@@ -14,6 +14,7 @@ class App extends Component {
 
     this.addTodo = this.addTodo.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
+    this.doneTodo = this.doneTodo.bind(this);
   }
 
   //Call this function before render for getting todos
@@ -40,7 +41,8 @@ class App extends Component {
       },
       body: JSON.stringify({
         todos:{
-          text: todoText
+          text: todoText,
+          done: false
         }
       })
     //We are going to receive a result from the serve
@@ -54,7 +56,8 @@ class App extends Component {
           this.setState({
             todos: this.state.todos.concat([{
               id: data.idTodo,
-              text: todoText
+              text: todoText,
+              done: false
             }])
           });
       }
@@ -78,6 +81,46 @@ class App extends Component {
     });      
   }
 
+  //Changes done status of todo from the server
+  doneTodo(id){
+    fetch('http://localhost:3001/task/update/'+id, {  
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        //Look for the element done selected
+          todo: this.state.todos.find((todo) => {
+            if(todo.id === id){
+              //Change the value of done
+              todo.done = !todo.done;
+              return todo;
+            }
+          })
+      })
+    //We are going to receive a result from the serve
+    }).then(results => {
+        return results.json();
+      }
+    ).then(data => {
+      //If the server update the todo, we set the state with the new status of todo
+      //(Receive done(data.doneTodo) from the serve)
+      if (data.ok) {
+        var auxTodos = this.state.todos;
+        auxTodos.map((todo) => {
+          if(todo.id === id){
+            todo.done = data.doneTodo;
+          }
+        });
+
+        this.setState({
+          todos: auxTodos
+        });  
+      }
+    });      
+  }
+
   render() {
     return (
       <div className="App container">
@@ -87,7 +130,7 @@ class App extends Component {
           <ul>
             {
               this.state.todos.map((todo) => {
-                return <TodoItem todo={todo} key={todo.id} id={todo.id} removeTodo={this.removeTodo}/>
+                return <TodoItem todo={todo} key={todo.id} id={todo.id} removeTodo={this.removeTodo} doneTodo={this.doneTodo}/>
               })
             }
           </ul>

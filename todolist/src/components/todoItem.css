@@ -1,16 +1,26 @@
 .todoWrapper{
     width: 90%;
-    border-bottom: 2px solid #efefef;
-    text-align: left;
+    border-bottom: 2px solid #efefef; 
     margin-bottom: 10px;
     font-size: 15px;
     word-wrap: break-word;
+    background-color: rgba(231, 249, 73, 0.42);
 }
 
 .todoWrapper:hover{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.btn{
-    margin-right: 10px;
+.text{
+    text-align: left;
+    margin: 10px 1px;
+}
+
+.btn-group{
+    margin: 10px 10px 5px 5px;
+}
+
+.done {
+    text-decoration: line-through;
+    background-color: rgba(73, 205, 249, 0.21);
 }

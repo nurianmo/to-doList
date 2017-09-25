@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
 
 //Add todo
 router.post('/add', function(req, res, next) {
-  db.result('INSERT INTO todo (text)' + 'VALUES(${text}) RETURNING id', req.body.todos)
+  db.result('INSERT INTO todo (text, done)' + 'VALUES(${text}, ${done}) RETURNING id', req.body.todos)
     .then(function(data){
       res.status(200).json({
         ok: true,
@@ -46,6 +46,21 @@ router.get('/del/:id', function(req, res, next) {
     .then(function(result){
       res.status(200)
       .json({ok: true});
+    })
+    .catch(function(err){
+      return next(err);
+    });
+});
+
+//Update todo
+router.put('/update/:id', function(req, res, next) {
+  db.result('UPDATE todo SET done=$1 WHERE id = $2 RETURNING done', [req.body.todo.done, req.params.id])
+    .then(function(data){
+      res.status(200)
+      .json({
+        ok: true,
+        doneTodo: data.rows[0].done
+      });
     })
     .catch(function(err){
       return next(err);
